@@ -9,7 +9,8 @@ const app = express();
 app.use(cors());
 dotenv.config(); 
 const client = new MongoClient(process.env.REACT_APP_MONGO_URL);
-const port = 3001
+const port = process.env.REACT_APP_PORT || 3001;
+
 client.connect((err) => {
     if (err) {
         console.log("DB connection failed:", err);
