@@ -2,7 +2,7 @@ import express from 'express'
 import { MongoClient } from 'mongodb';
 import dotenv from 'dotenv';
 import cors from 'cors'
-import {router} from "../route.js";
+import {router} from "./route.js";
 
 const app = express();
 
