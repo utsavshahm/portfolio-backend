@@ -5,7 +5,7 @@
   "description": "simple backend for form submission on portfolio website",
   "main": "index.js",
   "engines": {
-    "node": "14.x"
+    "node": "20.x"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
