@@ -1,41 +1,46 @@
-import express from 'express'
-import { MongoClient } from 'mongodb';
-import dotenv from 'dotenv';
-import cors from 'cors'
-import {router} from "./route.js";
+import express from "express";
+import dotenv from "dotenv";
+import cors from "cors";
+import { router } from "./routes/route.js";
+import mongoose from "mongoose";
 
 const app = express();
+dotenv.config(); // Load environment variables
 
-app.use(cors());
-dotenv.config(); 
-const client = new MongoClient(process.env.REACT_APP_MONGO_URL);
-const port = process.env.REACT_APP_PORT || 3001;
+const connectDB = async () => {
+  try {
+    const db = await mongoose.connect(process.env.REACT_APP_MONGO_URL);
+    return db;
+  } catch (error) {
+    console.log("Error connecting to MongoDB:", error);
+    throw error;
+  }
+};
 
-client.connect((err) => {
-    if (err) {
-        console.log("DB connection failed:", err);
-        return;
-    }
-    console.log("DB connection successful!");
-})
+const startServer = async () => {
+  try {
+    const myDatabase = await connectDB();
+    const db = mongoose.connection;
+    const contactCollection = db.collection("contact");
 
-  const db = client.db("portfolio");
-  const contactCollection = db.collection("contact");
+    app.locals.contactCollection = contactCollection;
 
-  // Make the contact collection available to the router
-  app.locals.contactCollection = contactCollection;
-
-  // Use the cors middleware
     app.use(cors());
     app.options("*", cors());
 
-
-  // Use JSON body parser middleware
     app.use(express.json());
 
-  // Import and use the router
-  app.use("/", router);
+    // Import and use the router
+    app.use("/", router);
 
-  app.listen(port, () => {
-    console.log(`Server is listening on port ${port}!`);
-  });
+    const port = process.env.PORT || 3001; // Use PORT from environment or default to 5000
+    app.listen(port, () => {
+      console.log(`Server is listening on port ${port}!`);
+    });
+  } catch (error) {
+    console.log("Error occurred:", error);
+    throw error;
+  }
+};
+
+startServer();

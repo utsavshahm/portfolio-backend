@@ -1,6 +1,6 @@
 import { Router } from 'express';
 const router = Router();
-import submitForm from './submitForm.js';
+import submitForm from '../controllers/submitForm.js';
 
 router.post('/contact', submitForm)
 
